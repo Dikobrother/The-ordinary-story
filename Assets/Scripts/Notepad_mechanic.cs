@@ -35,6 +35,8 @@ public class Notepad_mechanic : MonoBehaviour
     public GameObject EscUI;
     public GameObject normalUI;
 
+    public bool inEscMenu;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -53,10 +55,22 @@ public class Notepad_mechanic : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            player.lockCursor = !player.lockCursor;
-            EscUI.SetActive(!EscUI.active);
-            normalUI.SetActive(!normalUI.active);
-            change_permission();
+            if (inEscMenu)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                EscUI.SetActive(false);
+                normalUI.SetActive(true);
+                allow_permission();
+                inEscMenu = false;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                EscUI.SetActive(true);
+                normalUI.SetActive(false);
+                lock_permission();
+                inEscMenu = true;
+            }
         }
         InteractionRay();
     }
