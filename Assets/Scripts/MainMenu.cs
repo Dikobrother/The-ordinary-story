@@ -37,13 +37,22 @@ public class MainMenu : MonoBehaviour
 
     public GameObject brightobj;
 
+    public GameObject UIMenu;
+    public GameObject normalUI;
+
     void Start()
     {
         if(SceneManager.GetActiveScene().name == "Hub")
         {
             LoadSettings();
         }
+        
         SetSettings();
+        Invoke("brightborn", 0.1f);
+    }
+    public void brightborn()
+    {
+        brightobj.SetActive(true);
     }
     public void Settings_On()
     {
@@ -122,6 +131,23 @@ public class MainMenu : MonoBehaviour
     public void NewGameButton()
     {
         SceneManager.LoadScene("SampleScene");
+    }
+
+    public void QuitButton()
+    {
+        Notepad_mechanic player = GameObject.FindWithTag("Player").GetComponent<Notepad_mechanic>();
+        PlayerPrefs.SetInt("savedDay", player.current_day);
+        SceneManager.LoadScene("Hub");
+    }
+
+    public void Resume()
+    {
+        Notepad_mechanic player = GameObject.FindWithTag("Player").GetComponent<Notepad_mechanic>();
+        FirstPersonController player_ = GameObject.FindWithTag("Player").GetComponent<FirstPersonController>();
+        player_.lockCursor = true;
+        UIMenu.SetActive(false);
+        normalUI.SetActive(true);
+        player.allow_permission();
     }
 
     public void LoadSettings()
@@ -298,7 +324,7 @@ public class MainMenu : MonoBehaviour
 
         if (PlayerPrefs.HasKey("brightness"))
         {
-            brightobj.GetComponent<Image>().color = new Color(0, 0, 0, PlayerPrefs.GetFloat("brightness")/255);
+            brightobj.GetComponent<Image>().color = new Color(0f/255, 0f/255, 0f/255, PlayerPrefs.GetFloat("brightness")/255);
         }
         else
         {
